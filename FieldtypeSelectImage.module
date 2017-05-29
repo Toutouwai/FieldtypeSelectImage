@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * Fieldtype Select Image
+ *
+ * This Fieldtype stores a reference to a single image that is chosen from the images on the current page using a select dropdown.
+ *
+ */
+
+class FieldtypeSelectImage extends Fieldtype {
+
+	/**
+	 * Module information
+	 */
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Select Image',
+			'version' => 4,
+			'summary' => 'Allows the selection of a single image from any of the image fields on the current page.',
+			'installs' => 'InputfieldSelectImage',
+			'icon' => 'image'
+		);
+	}
+
+	/**
+	 * Get options for select field
+	 */
+	public function getImageOptions(Page $page) {
+		$options = [];
+		foreach($page->fields as $field) {
+			if($field->type instanceof FieldtypeImage) {
+				foreach($page->$field as $image) {
+					// key is image filename and value is image thumbnail url
+					$options[] = array("label" => $image->basename, "thumb" => $image->height(260)->url, "data" => "{$field->name}|{$image->basename}");
+				}
+			}
+		}
+		return $options;
+	}
+
+	/**
+	 * Get inputfield
+	 */
+	public function getInputfield(Page $page, Field $fields) {
+		$inputfield = $this->modules->get("InputfieldSelectImage");
+		$options = $this->getImageOptions($page);
+		// add options to the input field
+		foreach($options as $option) {
+			$label = $option["label"];
+			$value = $option["data"];
+			if ($value != "" && ($label != "" || $label == NULL)) {
+				if(!strlen($value)) continue;
+				$inputfield->addOption($value, $label, array("data-thumb" => $option["thumb"]));
+			}
+		}
+		return $inputfield;
+	}
+	/**
+	 * Get database schema
+	 */
+	public function getDatabaseSchema(Field $field) {
+		$schema = parent::getDatabaseSchema($field);
+		$schema['data'] = 'text NOT NULL';
+		$schema['keys']['data_exact'] = 'KEY `data_exact` (`data`(255))';
+		$schema['keys']['data'] = 'FULLTEXT KEY `data` (`data`)';
+		return $schema;
+	}
+
+	/**
+	 * Sanitize value
+	 */
+	public function sanitizeValue(Page $page, Field $field, $value) {
+		if(is_string($value) && strpos($value,"|") !== false) {
+			list($field_name, $image_name) = explode("|", $value);
+			$value = $page->$field_name->get("name=$image_name");
+		}
+		if( !is_object($value) || $value->className() !== 'Pageimage' ) $value = '';
+		return $value;
+	}
+
+	/**
+	 * Wakeup value
+	 */
+	public function ___wakeupValue(Page $page, Field $field, $value) {
+		if (strpos($value,"|") !== false) {
+			list($field_name, $image_name) = explode("|", $value);
+			$value = $page->$field_name->get("name=$image_name");
+		}
+		return $value;
+	}
+
+	/**
+	 * Sleep value
+	 */
+	public function ___sleepValue(Page $page, Field $field, $value) {
+		if(is_object($value)){
+			$field_name = "";
+			foreach($page->fields as $field) {
+				if($field->type instanceof FieldtypeImage) {
+					if($page->get($field->name)->has("name={$value->basename}")) {
+						$field_name = $field->name;
+					}
+				}
+			}
+			$image_name = $value->basename;
+			$value = "{$field_name}|{$image_name}";
+		}
+		return (string) $value;
+	}
+
+}

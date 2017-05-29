@@ -1,0 +1,59 @@
+<?php
+
+class InputfieldSelectImage extends InputfieldSelect {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Select Image',
+			'version' => 2,
+			'summary' => 'Extended version of select, showing image thumbnail',
+			'requires' => 'FieldtypeSelectImage'
+		);
+	}
+
+	/**
+	 * Render and return the output for this Select
+	 *
+	 */
+	public function ___render() {
+		$this->checkDefaultValue();
+		$attrs = $this->getAttributes();
+		unset($attrs['value']);
+
+		$out = "\n<select " . $this->getAttributesString($attrs) . ">\n" .
+			$this->renderOptions($this->options) .
+			"\n</select>\n<div class='selected-thumb'></div>";
+
+		return $out;
+	}
+
+	/**
+	 * Returns whether the provided value is selected
+	 *
+	 */
+	public function isOptionSelected($value) {
+		// we want $value to be only the image name
+		list(,$value) = explode("|", $value, 2);
+
+		$valueAttr = $this->attr('value');
+		if(empty($valueAttr)) {
+			// no value set yet, check if it's set in any of the option attributes
+			$selected = false;
+			if(isset($this->optionAttributes[$value])) {
+				$attrs = $this->optionAttributes[$value];
+				if(!empty($attrs['selected']) || !empty($attrs['checked'])) $selected = true;
+
+			}
+			if($selected) return true;
+		}
+
+		if($this instanceof InputfieldHasArrayValue) {
+			// if(is_array($this->attr('value'))) {
+			// multiple selection
+			return in_array($value, $this->attr('value'));
+		}
+
+		return "$value" == (string) $this->value;
+	}
+
+}
