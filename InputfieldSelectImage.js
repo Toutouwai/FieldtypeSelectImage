@@ -1,12 +1,14 @@
 $(function(){
 
+	var $select = $('.InputfieldSelectImage select');
+
     // Add thumbnail when page loads
-    $(".InputfieldSelectImage select").each(function() {
+	$select.each(function() {
         appendThumb($(this));
     });
 
     // Add thumbnail when select changes
-    $(".InputfieldSelectImage select").on("change", function() {
+	$select.on('change', function() {
         appendThumb($(this));
     });
 
