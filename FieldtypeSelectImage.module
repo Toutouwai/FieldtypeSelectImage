@@ -1,9 +1,17 @@
-<?php
+<?php namespace ProcessWire;
 
 /**
+ *
  * Fieldtype Select Image
  *
- * This Fieldtype stores a reference to a single image that is chosen from the images on the current page using a select dropdown.
+ * @author Robin Sallis
+ *
+ * ProcessWire 3.x
+ * Copyright (C) 2011 by Ryan Cramer
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * http://www.processwire.com
+ * http://www.ryancramer.com
  *
  */
 
@@ -19,8 +27,8 @@ class FieldtypeSelectImage extends Fieldtype {
 			'version' => '0.1.4',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
-			'installs' => 'InputfieldSelectImage',
 			'icon' => 'image',
+			'installs' => 'InputfieldSelectImage',
 		);
 	}
 
