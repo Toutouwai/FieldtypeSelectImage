@@ -2,7 +2,7 @@
 
 /**
  *
- * Inputfield Select Image
+ * Select Image
  *
  * @author Robin Sallis
  *
@@ -14,19 +14,33 @@
  * http://www.ryancramer.com
  *
  */
-
 class InputfieldSelectImage extends InputfieldSelect {
 
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Select Image',
-			'summary' => 'Extended version of select, showing image thumbnail.',
-			'version' => '0.1.4',
+			'summary' => 'Extended version of select, showing image thumbnail',
+			'version' => '0.2.0',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
 			'icon' => 'image',
-			'requires' => 'FieldtypeSelectImage',
+			'requires' => 'ProcessWire>=3.0.0, FieldtypeSelectImage',
 		);
+	}
+
+	/**
+	 * Load dependencies
+	 *
+	 * @param Inputfield|null $parent
+	 * @param bool $renderValueMode
+	 */
+	public function renderReady(Inputfield $parent = null, $renderValueMode = false) {
+		parent::renderReady();
+		$config = $this->wire()->config;
+		$info = $this->getModuleInfo();
+		$version = $info['version'];
+		$config->styles->add($config->urls->$this . "image-picker/image-picker.css?v={$version}");
+		$config->scripts->add($config->urls->$this . "image-picker/image-picker.js?v={$version}");
 	}
 
 	/**
@@ -36,37 +50,37 @@ class InputfieldSelectImage extends InputfieldSelect {
 		$this->checkDefaultValue();
 		$attrs = $this->getAttributes();
 		unset($attrs['value']);
-
-		$out = "\n<select " . $this->getAttributesString($attrs) . ">\n" .
-			$this->renderOptions($this->options) .
-			"\n</select>\n<div class='selected-thumb'></div>";
-
+		if(count($this->options)) {
+			$attrs_str = $this->getAttributesString($attrs);
+			$options = $this->renderOptions($this->options);
+			$out = "<select $attrs_str>$options</select>";
+		} else {
+			$out = $this->_('There are no images uploaded to this page.');
+		}
 		return $out;
 	}
 
 	/**
 	 * Returns whether the provided value is selected
+	 *
+	 * @param string $value
+	 * @return bool
 	 */
 	public function isOptionSelected($value) {
 		// We want $value to be only the image name
-		list(,$value) = explode("|", $value, 2);
-
-		$valueAttr = $this->attr('value');
-		if(empty($valueAttr)) {
+		list(,$value) = explode('|', $value, 2);
+		if(empty($this->value)) {
 			// No value set yet, check if it's set in any of the option attributes
 			$selected = false;
 			if(isset($this->optionAttributes[$value])) {
 				$attrs = $this->optionAttributes[$value];
-				if(!empty($attrs['selected']) || !empty($attrs['checked'])) $selected = true;
-
+				if(!empty($attrs['selected'])) $selected = true;
 			}
 			if($selected) return true;
 		}
-
 		if($this instanceof InputfieldHasArrayValue) {
 			return in_array($value, $this->attr('value'));
 		}
-
 		return "$value" == (string) $this->value;
 	}
 

@@ -1,1 +1,4 @@
-.selected-thumb { margin-top:10px; }
+.InputfieldSelectImage select { display:none !important; }
+.InputfieldSelectImage .image_picker_selector img { height:120px; }
+.InputfieldSelectImage ul.thumbnails.image_picker_selector li .thumbnail { border:1px solid #d9e1ea; border-radius:2px; cursor:pointer; }
+.InputfieldSelectImage ul.thumbnails.image_picker_selector li .thumbnail.selected { background:#e83561; border-color:#e83561; }
