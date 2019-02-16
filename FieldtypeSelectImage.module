@@ -23,7 +23,7 @@ class FieldtypeSelectImage extends Fieldtype {
 		return array(
 			'title' => 'Select Image',
 			'summary' => 'Allows the selection of a single image from any of the image fields on the current page.',
-			'version' => '0.2.0',
+			'version' => '0.2.1',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
 			'icon' => 'image',
@@ -118,7 +118,7 @@ class FieldtypeSelectImage extends Fieldtype {
 	public function ___wakeupValue(Page $page, Field $field, $value) {
 		if(strpos($value, '|') !== false) {
 			list($field_name, $image_name) = explode('|', $value);
-			$value = $page->$field_name->get("name=$image_name");
+			$value = $page->$field_name ? $page->$field_name->get("name=$image_name") : null;
 		}
 		return $value;
 	}
