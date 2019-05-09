@@ -23,7 +23,7 @@ class FieldtypeSelectImage extends Fieldtype {
 		return array(
 			'title' => 'Select Image',
 			'summary' => 'Allows the selection of a single image from any of the image fields on the current page.',
-			'version' => '0.2.1',
+			'version' => '0.2.2',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
 			'icon' => 'image',
@@ -65,6 +65,7 @@ class FieldtypeSelectImage extends Fieldtype {
 			if($field->type instanceof FieldtypeImage) {
 				foreach($page->$field as $image) {
 					/* @var Pageimage $image */
+					if($image->isTemp()) continue;
 					$options[] = array(
 						'label' => $image->basename,
 						'thumb' => $image->height(260)->url,
