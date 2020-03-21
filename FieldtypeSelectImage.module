@@ -1,19 +1,5 @@
 <?php namespace ProcessWire;
 
-/**
- *
- * Select Image
- *
- * @author Robin Sallis
- *
- * ProcessWire 3.x
- * Copyright (C) 2011 by Ryan Cramer
- * Licensed under GNU/GPL v2, see LICENSE.TXT
- *
- * http://www.processwire.com
- * http://www.ryancramer.com
- *
- */
 class FieldtypeSelectImage extends Fieldtype {
 
 	/**

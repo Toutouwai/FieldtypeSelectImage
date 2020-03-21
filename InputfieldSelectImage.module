@@ -1,26 +1,12 @@
 <?php namespace ProcessWire;
 
-/**
- *
- * Select Image
- *
- * @author Robin Sallis
- *
- * ProcessWire 3.x
- * Copyright (C) 2011 by Ryan Cramer
- * Licensed under GNU/GPL v2, see LICENSE.TXT
- *
- * http://www.processwire.com
- * http://www.ryancramer.com
- *
- */
 class InputfieldSelectImage extends InputfieldSelect {
 
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Select Image',
 			'summary' => 'Extended version of select, showing image thumbnail',
-			'version' => '0.2.2',
+			'version' => '0.2.3',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
 			'icon' => 'image',
