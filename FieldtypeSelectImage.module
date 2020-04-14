@@ -9,7 +9,7 @@ class FieldtypeSelectImage extends Fieldtype {
 		return array(
 			'title' => 'Select Image',
 			'summary' => 'Allows the selection of a single image from any of the image fields on the current page.',
-			'version' => '0.2.3',
+			'version' => '0.2.4',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
 			'icon' => 'image',
@@ -33,7 +33,7 @@ class FieldtypeSelectImage extends Fieldtype {
 			$inputfield->addOption(
 				$option['data'],
 				$option['label'],
-				array('data-img-src' => $option['thumb'])
+				['data-img-src' => $option['thumb']]
 			);
 		}
 		return $inputfield;
@@ -46,17 +46,18 @@ class FieldtypeSelectImage extends Fieldtype {
 	 * @return array
 	 */
 	public function getImageOptions(Page $page) {
-		$options = array();
+		if(!$page->fields) return [];
+		$options = [];
 		foreach($page->fields as $field) {
 			if($field->type instanceof FieldtypeImage) {
 				foreach($page->$field as $image) {
 					/* @var Pageimage $image */
 					if($image->isTemp()) continue;
-					$options[] = array(
+					$options[] = [
 						'label' => $image->basename,
 						'thumb' => $image->height(260)->url,
 						'data' => "{$field->name}|{$image->basename}"
-					);
+					];
 				}
 			}
 		}

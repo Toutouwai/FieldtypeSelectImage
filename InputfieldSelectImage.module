@@ -6,7 +6,7 @@ class InputfieldSelectImage extends InputfieldSelect {
 		return array(
 			'title' => 'Select Image',
 			'summary' => 'Extended version of select, showing image thumbnail',
-			'version' => '0.2.3',
+			'version' => '0.2.4',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/FieldtypeSelectImage',
 			'icon' => 'image',
